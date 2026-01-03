@@ -1,0 +1,27 @@
+name: screen_time_blocker
+description: "A Flutter plugin for blocking apps using iOS Screen Time API and Android Digital Wellbeing."
+version: 0.0.1
+homepage: https://github.com/developerjamiu/screen_time_blocker
+
+environment:
+  sdk: ^3.10.1
+  flutter: '>=3.3.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  plugin_platform_interface: ^2.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: com.developerjamiu.screen_time_blocker
+        pluginClass: ScreenTimeBlockerPlugin
+      ios:
+        pluginClass: ScreenTimeBlockerPlugin
