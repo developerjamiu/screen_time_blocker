@@ -72,6 +72,14 @@ public class ScreenTimeFeature: NSObject {
     
     private func getAuthorizationStatus(result: @escaping FlutterResult) {
         let status = AuthorizationCenter.shared.authorizationStatus
+        
+        // Workaround: If status seems wrong but we have a saved selection,
+        // the user must have approved in the past
+        if status != .approved && !currentSelection.applicationTokens.isEmpty {
+            result("approved")
+            return
+        }
+        
         switch status {
         case .approved: result("approved")
         case .denied: result("denied")
