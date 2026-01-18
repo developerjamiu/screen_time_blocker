@@ -137,14 +137,14 @@ class MethodChannelScreenTimeBlocker extends ScreenTimeBlockerPlatform {
   }
 
   @override
-  Future<bool> unblockForToday() async {
+  Future<bool> unblockUntilNextSchedule() async {
     _ensureSupported();
     try {
-      final result = await methodChannel.invokeMethod<bool>('unblockForToday');
+      final result = await methodChannel.invokeMethod<bool>('unblockUntilNextSchedule');
       return result ?? false;
     } on PlatformException catch (e) {
       debugPrint(
-        'ScreenTimeBlocker: Failed to unblock for today: ${e.message}',
+        'ScreenTimeBlocker: Failed to unblock until next schedule: ${e.message}',
       );
       return false;
     }

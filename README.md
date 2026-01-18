@@ -315,7 +315,7 @@ await blocker.startSchedule(scheduleId: 'afternoon', hour: 14, minute: 0);
 await blocker.startSchedule(scheduleId: 'evening', hour: 20, minute: 0);
 
 // When user completes their task, unblock for today
-await blocker.unblockForToday();
+await blocker.unblockUntilNextSchedule();
 
 // Stop a specific schedule
 await blocker.stopSchedule('morning');
@@ -331,7 +331,7 @@ await blocker.stopAllSchedules();
 await blocker.blockNow();
 
 // Unblock for the rest of today
-await blocker.unblockForToday();
+await blocker.unblockUntilNextSchedule();
 ```
 
 ### API Reference
@@ -348,7 +348,7 @@ await blocker.unblockForToday();
 | `startSchedule(scheduleId, hour, minute)` | Starts a named daily blocking schedule          |
 | `stopSchedule(scheduleId)`                | Stops a specific schedule by ID                 |
 | `stopAllSchedules()`                      | Stops all schedules and removes all blocks      |
-| `unblockForToday()`                       | Temporarily unblocks until next scheduled time  |
+| `unblockUntilNextSchedule()`              | Temporarily unblocks until next scheduled time  |
 | `blockNow()`                              | Blocks selected apps immediately                |
 
 #### `AuthorizationStatus`

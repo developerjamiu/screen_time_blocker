@@ -113,12 +113,12 @@ class _HomeScreenState extends State<HomeScreen> {
     _setStatus(success ? 'Schedule stopped ✅' : 'Failed to stop ❌');
   }
 
-  Future<void> _unblockToday() async {
-    _setStatus('Unblocking for today...');
+  Future<void> _unblockUntilNextSchedule() async {
+    _setStatus('Unblocking until next schedule...');
 
-    final success = await _blocker.unblockForToday();
+    final success = await _blocker.unblockUntilNextSchedule();
 
-    _setStatus(success ? 'Unblocked for today ✅' : 'Failed to unblock ❌');
+    _setStatus(success ? 'Unblocked until next schedule ✅' : 'Failed to unblock ❌');
   }
 
   void _setStatus(String message) {
@@ -248,11 +248,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
             const SizedBox(height: 12),
 
-            // Unblock Today Button
+            // Unblock Until Next Schedule Button
             ElevatedButton.icon(
-              onPressed: _unblockToday,
-              icon: const Icon(Icons.today),
-              label: const Text('Unblock for Today'),
+              onPressed: _unblockUntilNextSchedule,
+              icon: const Icon(Icons.lock_open),
+              label: const Text('Unblock Until Next Schedule'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.green.shade100,
                 foregroundColor: Colors.green.shade900,

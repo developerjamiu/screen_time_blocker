@@ -82,11 +82,11 @@ abstract class ScreenTimeBlockerPlatform extends PlatformInterface {
   /// Stops the current monitoring schedule and removes all blocks.
   Future<bool> stopAllSchedules();
 
-  /// Temporarily unblocks apps for the current day.
+  /// Temporarily unblocks apps until the next scheduled time.
   ///
-  /// The schedule remains active and will re-block tomorrow.
-  Future<bool> unblockForToday() {
-    throw UnimplementedError('unblockForToday() has not been implemented.');
+  /// The schedule remains active and will re-block at the next interval.
+  Future<bool> unblockUntilNextSchedule() {
+    throw UnimplementedError('unblockUntilNextSchedule() has not been implemented.');
   }
 
   /// Immediately blocks the selected apps without waiting for schedule.

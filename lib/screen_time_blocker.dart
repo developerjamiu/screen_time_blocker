@@ -41,7 +41,7 @@ export 'src/models/models.dart';
 /// await blocker.startSchedule(hour: 9, minute: 0);
 ///
 /// // When user completes their task, unblock for today
-/// await blocker.unblockForToday();
+/// await blocker.unblockUntilNextSchedule();
 /// ```
 class ScreenTimeBlocker {
   /// Creates a new [ScreenTimeBlocker] instance.
@@ -113,7 +113,7 @@ class ScreenTimeBlocker {
   ///
   /// Once started, selected apps will be blocked daily starting at the
   /// specified [hour] and [minute] until either:
-  /// - [unblockForToday] is called
+  /// - [unblockUntilNextSchedule] is called
   /// - [stopSchedule] is called
   /// - The day ends (23:59)
   ///
@@ -149,7 +149,7 @@ class ScreenTimeBlocker {
   /// Stops all active schedules and removes all blocks.
   Future<bool> stopAllSchedules() => _platform.stopAllSchedules();
 
-  Future<bool> unblockForToday() => _platform.unblockForToday();
+  Future<bool> unblockUntilNextSchedule() => _platform.unblockUntilNextSchedule();
 
   /// Immediately blocks the selected apps without waiting for schedule.
   ///

@@ -49,7 +49,7 @@ public class ScreenTimeFeature: NSObject {
         case "startSchedule": handleStartSchedule(call: call, result: result)
         case "stopSchedule": handleStopSchedule(call: call, result: result)
         case "stopAllSchedules": stopAllSchedules(result: result)
-        case "unblockForToday": unblockForToday(result: result)
+        case "unblockUntilNextSchedule": unblockUntilNextSchedule(result: result)
         case "blockNow": blockNow(result: result)
         default:
             result(FlutterMethodNotImplemented)
@@ -206,13 +206,13 @@ public class ScreenTimeFeature: NSObject {
         result(true)
     }
     
-    private func unblockForToday(result: @escaping FlutterResult) {
+    private func unblockUntilNextSchedule(result: @escaping FlutterResult) {
         clearShields()
-        
+
 #if DEBUG
-        print("🔓 ScreenTimeBlocker: Apps unblocked for today")
+        print("🔓 ScreenTimeBlocker: Apps unblocked until next schedule")
 #endif
-        
+
         result(true)
     }
     
