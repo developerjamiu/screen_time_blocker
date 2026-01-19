@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F5F5">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="32dp">
+
+        <!-- Lock Icon -->
+        <ImageView
+            android:id="@+id/lockIcon"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/ic_lock"
+            android:contentDescription="Lock icon" />
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/blockingTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/blocking_title"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="#212121" />
+
+        <!-- App Name -->
+        <TextView
+            android:id="@+id/blockedAppName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textSize="16sp"
+            android:textColor="#757575" />
+
+        <!-- Message -->
+        <TextView
+            android:id="@+id/blockingMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/blocking_message"
+            android:textSize="14sp"
+            android:textColor="#757575"
+            android:textAlignment="center"
+            android:paddingHorizontal="24dp" />
+
+        <!-- Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/openAppButton"
+                android:layout_width="200dp"
+                android:layout_height="48dp"
+                android:text="@string/blocking_button_open_app"
+                android:textColor="@android:color/white"
+                android:background="@drawable/btn_primary" />
+
+            <Button
+                android:id="@+id/closeButton"
+                android:layout_width="200dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/blocking_button_close"
+                android:textColor="#2196F3"
+                android:background="?android:attr/selectableItemBackground" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>

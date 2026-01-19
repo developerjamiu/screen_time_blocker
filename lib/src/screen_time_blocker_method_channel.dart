@@ -14,9 +14,10 @@ class MethodChannelScreenTimeBlocker extends ScreenTimeBlockerPlatform {
 
   @override
   bool get isSupported {
-    // Screen Time API is only available on iOS 15+ and macOS 12+
+    // Screen Time API is available on iOS 15+, macOS 12+, and Android
     return defaultTargetPlatform == TargetPlatform.iOS ||
-        defaultTargetPlatform == TargetPlatform.macOS;
+        defaultTargetPlatform == TargetPlatform.macOS ||
+        defaultTargetPlatform == TargetPlatform.android;
   }
 
   @override
@@ -164,10 +165,89 @@ class MethodChannelScreenTimeBlocker extends ScreenTimeBlockerPlatform {
     }
   }
 
+  @override
+  Future<List<AppInfo>> getInstalledApps() async {
+    _ensureSupported();
+    // Only supported on Android
+    if (defaultTargetPlatform != TargetPlatform.android) {
+      return [];
+    }
+    try {
+      final result = await methodChannel.invokeMethod<List<Object?>>('getInstalledApps');
+      if (result == null) return [];
+      return result
+          .whereType<Map<Object?, Object?>>()
+          .map((map) => AppInfo.fromMap(map))
+          .toList();
+    } on PlatformException catch (e) {
+      debugPrint(
+        'ScreenTimeBlocker: Failed to get installed apps: ${e.message}',
+      );
+      return [];
+    }
+  }
+
+  @override
+  Future<bool> setSelectedApps(List<String> packageNames) async {
+    _ensureSupported();
+    // Only supported on Android
+    if (defaultTargetPlatform != TargetPlatform.android) {
+      return false;
+    }
+    try {
+      final result = await methodChannel.invokeMethod<bool>(
+        'setSelectedApps',
+        {'packageNames': packageNames},
+      );
+      return result ?? false;
+    } on PlatformException catch (e) {
+      debugPrint(
+        'ScreenTimeBlocker: Failed to set selected apps: ${e.message}',
+      );
+      return false;
+    }
+  }
+
+  @override
+  Future<bool> hasOverlayPermission() async {
+    _ensureSupported();
+    // Only applicable on Android
+    if (defaultTargetPlatform != TargetPlatform.android) {
+      return true;
+    }
+    try {
+      final result = await methodChannel.invokeMethod<bool>('hasOverlayPermission');
+      return result ?? false;
+    } on PlatformException catch (e) {
+      debugPrint(
+        'ScreenTimeBlocker: Failed to check overlay permission: ${e.message}',
+      );
+      return false;
+    }
+  }
+
+  @override
+  Future<bool> requestOverlayPermission() async {
+    _ensureSupported();
+    // Only applicable on Android
+    if (defaultTargetPlatform != TargetPlatform.android) {
+      return true;
+    }
+    try {
+      final result = await methodChannel.invokeMethod<bool>('requestOverlayPermission');
+      return result ?? false;
+    } on PlatformException catch (e) {
+      debugPrint(
+        'ScreenTimeBlocker: Failed to request overlay permission: ${e.message}',
+      );
+      return false;
+    }
+  }
+
   void _ensureSupported() {
     if (!isSupported) {
       throw UnsupportedError(
-        'ScreenTimeBlocker is only supported on iOS 15+ and macOS 12+. '
+        'ScreenTimeBlocker is only supported on iOS 15+, macOS 12+, and Android. '
         'Current platform: $defaultTargetPlatform',
       );
     }

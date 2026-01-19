@@ -1,13 +1,13 @@
 # Screen Time Blocker
 
-A Flutter plugin for blocking apps using iOS Screen Time API (Family Controls, ManagedSettings, DeviceActivity).
+A Flutter plugin for blocking apps using iOS Screen Time API and Android Accessibility Service.
 
 ## Platform Support
 
 | Platform | Status       | Minimum Version |
 | -------- | ------------ | --------------- |
 | iOS      | ✅ Supported | iOS 16.0+       |
-| Android  | 🚧 Planned   | -               |
+| Android  | ✅ Supported | API 24+         |
 | macOS    | ❌           | -               |
 | Web      | ❌           | -               |
 | Windows  | ❌           | -               |
@@ -15,12 +15,27 @@ A Flutter plugin for blocking apps using iOS Screen Time API (Family Controls, M
 
 ## Features
 
+### iOS
 - ✅ Request Screen Time authorization
-- ✅ Native Family Activity Picker for selecting apps/categories
+- ✅ Native Family Activity Picker for selecting apps/categories/websites
 - ✅ Multiple simultaneous blocking schedules
 - ✅ Immediate blocking without schedule
 - ✅ Temporary unblock functionality
 - ✅ Persistent selection across app restarts
+- ✅ Category blocking
+- ✅ Web domain blocking
+
+### Android
+- ✅ Accessibility Service for app blocking
+- ✅ Native app picker for selecting apps
+- ✅ Multiple simultaneous blocking schedules
+- ✅ Immediate blocking without schedule
+- ✅ Temporary unblock functionality
+- ✅ Persistent selection across app restarts
+- ✅ Blocking overlay when apps are opened
+- ✅ Boot receiver to restore schedules after restart
+- ⚠️ No category blocking (Android limitation)
+- ⚠️ No web domain blocking (Android limitation)
 
 ## Installation
 
@@ -31,6 +46,67 @@ dependencies:
   screen_time_blocker:
     path: ../screen_time_blocker # or publish to pub.dev
 ```
+
+## Android Setup (Required)
+
+The Android implementation uses an Accessibility Service to detect when blocked apps are opened.
+
+### 1. Permissions (Automatic)
+
+The plugin automatically includes these permissions in its `AndroidManifest.xml`:
+- `QUERY_ALL_PACKAGES` - Query installed apps
+- `SYSTEM_ALERT_WINDOW` - Show blocking overlay
+- `REQUEST_IGNORE_BATTERY_OPTIMIZATIONS` - Keep service running
+- `POST_NOTIFICATIONS` - Show blocking notifications
+- `FOREGROUND_SERVICE` - Run blocking service
+- `RECEIVE_BOOT_COMPLETED` - Restart service on boot
+- `SCHEDULE_EXACT_ALARM` - Precise schedule timing
+
+### 2. User-Facing Setup
+
+Your app needs to guide users through these steps:
+
+#### a. Enable Accessibility Service
+
+```dart
+// Request authorization opens accessibility settings
+await blocker.requestAuthorization();
+
+// Check if user enabled it
+final status = await blocker.getAuthorizationStatus();
+if (status == AuthorizationStatus.approved) {
+  // Accessibility service is enabled
+}
+```
+
+Users must manually enable the accessibility service in Settings > Accessibility > Installed apps > Your App.
+
+#### b. Overlay Permission (Android 6+)
+
+The plugin will automatically request overlay permission when needed, but you should explain to users why it's needed.
+
+#### c. Battery Optimization (Recommended)
+
+For reliable blocking, recommend users disable battery optimization for your app. This prevents Android from killing the accessibility service.
+
+### 3. Play Store Considerations
+
+Apps using Accessibility Services face **strict Play Store scrutiny**:
+
+1. **Privacy Policy**: You must have a privacy policy explaining how you use accessibility.
+2. **App Description**: Clearly explain why accessibility permission is needed.
+3. **Video Demo**: Google may request a video showing proper use.
+4. **Declare Permissions**: In Play Console, declare accessibility service use.
+
+### 4. Customizing the Blocking Overlay
+
+The blocking overlay appearance is defined in the plugin's resources. To customize:
+
+1. Override the layout by creating `res/layout/overlay_blocking.xml` in your app
+2. Override strings in `res/values/strings.xml`
+3. Override colors in `res/values/colors.xml`
+
+---
 
 ## iOS Setup (Required)
 
@@ -406,6 +482,57 @@ class SelectionSummary {
 
 - Each schedule needs a unique `scheduleId`
 - Use descriptive IDs like `'morning'`, `'afternoon'`, `'evening'`
+
+## Troubleshooting (Android)
+
+### "Accessibility service not found"
+
+- The accessibility service must be declared in the plugin's AndroidManifest.xml
+- Ensure the plugin is properly included in your dependencies
+
+### "Apps not being blocked"
+
+- Verify accessibility service is enabled in Settings
+- Check that the app has overlay permission
+- Ensure battery optimization is disabled
+- Check that apps are selected in the app picker
+
+### "Blocking overlay doesn't show"
+
+- Grant overlay permission (Settings > Apps > Your App > Display over other apps)
+- On some devices, this is called "Appear on top" or "Draw over other apps"
+
+### "Service stops after a while"
+
+- Disable battery optimization for your app
+- On Xiaomi/MIUI: Add to "Autostart" apps
+- On Huawei: Add to "Protected apps"
+- On Samsung: Disable "Put app to sleep"
+- On Oppo/Vivo: Enable "Allow background activity"
+
+### "Schedule doesn't trigger"
+
+- Ensure exact alarm permission is granted (Android 12+)
+- Check that the device isn't in Doze mode during schedule time
+- Verify the schedule was created successfully (check logs)
+
+### Play Store rejection
+
+- Ensure you have a clear privacy policy
+- Accessibility service description must explain the purpose
+- Don't access any data beyond what's needed for blocking
+- Consider using a less invasive method if possible
+
+## Platform Differences
+
+| Feature | iOS | Android |
+| ------- | --- | ------- |
+| Blocking mechanism | System-level shields | Accessibility + overlay |
+| Category blocking | ✅ | ❌ |
+| Web domain blocking | ✅ | ❌ |
+| User can bypass | Difficult | Can disable service |
+| Setup complexity | High (extensions required) | Medium (permissions only) |
+| Play Store/App Store | Allowed | Strict review |
 
 ## License
 

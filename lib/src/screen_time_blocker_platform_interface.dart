@@ -94,6 +94,38 @@ abstract class ScreenTimeBlockerPlatform extends PlatformInterface {
     throw UnimplementedError('blockNow() has not been implemented.');
   }
 
+  /// Gets the list of installed apps that can be blocked (Android only).
+  ///
+  /// Returns a list of [AppInfo] objects containing app details.
+  /// On iOS, this returns an empty list as iOS uses the native Family Activity Picker.
+  Future<List<AppInfo>> getInstalledApps() {
+    throw UnimplementedError('getInstalledApps() has not been implemented.');
+  }
+
+  /// Sets the apps to be blocked (Android only).
+  ///
+  /// [packageNames] is a list of package names to block.
+  /// On iOS, this does nothing as iOS uses the native Family Activity Picker.
+  Future<bool> setSelectedApps(List<String> packageNames) {
+    throw UnimplementedError('setSelectedApps() has not been implemented.');
+  }
+
+  /// Checks if the app has overlay permission (Android only).
+  ///
+  /// This permission is required to show the blocking overlay on Android.
+  /// On iOS, this always returns true.
+  Future<bool> hasOverlayPermission() {
+    throw UnimplementedError('hasOverlayPermission() has not been implemented.');
+  }
+
+  /// Requests overlay permission (Android only).
+  ///
+  /// Opens the system settings to grant "Display over other apps" permission.
+  /// On iOS, this does nothing and returns true.
+  Future<bool> requestOverlayPermission() {
+    throw UnimplementedError('requestOverlayPermission() has not been implemented.');
+  }
+
   /// Checks if this platform supports Screen Time blocking.
   bool get isSupported;
 }

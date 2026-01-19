@@ -47,7 +47,35 @@ android {
         minSdk = 24
     }
 
+    buildFeatures {
+        viewBinding = true
+    }
+
     dependencies {
+        // AndroidX Core
+        implementation("androidx.core:core-ktx:1.15.0")
+        implementation("androidx.appcompat:appcompat:1.7.0")
+
+        // Lifecycle for coroutines
+        implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7")
+        implementation("androidx.lifecycle:lifecycle-service:2.8.7")
+
+        // Coroutines
+        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
+
+        // WorkManager for reliable scheduling
+        implementation("androidx.work:work-runtime-ktx:2.10.0")
+
+        // RecyclerView for app picker
+        implementation("androidx.recyclerview:recyclerview:1.4.0")
+
+        // Material Design
+        implementation("com.google.android.material:material:1.12.0")
+
+        // Gson for JSON serialization
+        implementation("com.google.code.gson:gson:2.11.0")
+
+        // Testing
         testImplementation("org.jetbrains.kotlin:kotlin-test")
         testImplementation("org.mockito:mockito-core:5.0.0")
     }

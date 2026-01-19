@@ -2,6 +2,7 @@ import 'src/models/models.dart';
 import 'src/screen_time_blocker_platform_interface.dart';
 
 export 'src/models/models.dart';
+export 'src/widgets/widgets.dart';
 
 /// A Flutter plugin for blocking apps using iOS Screen Time API.
 ///
@@ -156,4 +157,60 @@ class ScreenTimeBlocker {
   /// Useful for testing or when you want to block apps right away
   /// based on some condition rather than a time-based schedule.
   Future<bool> blockNow() => _platform.blockNow();
+
+  /// Gets the list of installed apps that can be blocked (Android only).
+  ///
+  /// Returns a list of [AppInfo] objects containing app details including
+  /// package name, display name, icon, and selection state.
+  ///
+  /// On iOS, this returns an empty list as iOS uses the native
+  /// Family Activity Picker which cannot be replaced with a custom UI.
+  ///
+  /// Example:
+  /// ```dart
+  /// final apps = await blocker.getInstalledApps();
+  /// for (final app in apps) {
+  ///   print('${app.appName} (${app.packageName})');
+  /// }
+  /// ```
+  Future<List<AppInfo>> getInstalledApps() => _platform.getInstalledApps();
+
+  /// Sets the apps to be blocked (Android only).
+  ///
+  /// [packageNames] is a list of package names to block.
+  /// This is typically called after the user makes a selection in
+  /// your custom app picker UI.
+  ///
+  /// On iOS, this does nothing as iOS uses the native Family Activity Picker.
+  ///
+  /// Example:
+  /// ```dart
+  /// await blocker.setSelectedApps(['com.facebook.katana', 'com.instagram.android']);
+  /// ```
+  Future<bool> setSelectedApps(List<String> packageNames) =>
+      _platform.setSelectedApps(packageNames);
+
+  /// Checks if the app has overlay permission (Android only).
+  ///
+  /// This permission is required to show the blocking overlay on Android.
+  /// Without this permission, blocking will still work but will navigate
+  /// to the home screen instead of showing the custom overlay.
+  ///
+  /// On iOS, this always returns true.
+  Future<bool> hasOverlayPermission() => _platform.hasOverlayPermission();
+
+  /// Requests overlay permission (Android only).
+  ///
+  /// Opens the system settings to grant "Display over other apps" permission.
+  /// The user must manually enable this permission.
+  ///
+  /// On iOS, this does nothing and returns true.
+  ///
+  /// Example:
+  /// ```dart
+  /// if (!await blocker.hasOverlayPermission()) {
+  ///   await blocker.requestOverlayPermission();
+  /// }
+  /// ```
+  Future<bool> requestOverlayPermission() => _platform.requestOverlayPermission();
 }

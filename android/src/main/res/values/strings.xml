@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Screen Time Blocker</string>
+
+    <!-- Accessibility Service -->
+    <string name="accessibility_service_description">This service monitors which apps you open to block distracting apps during your scheduled focus time. It only checks which app is in the foreground - it does not read any content or personal data.</string>
+
+    <!-- App Picker -->
+    <string name="app_picker_title">Select Apps to Block</string>
+    <string name="app_picker_subtitle">Choose which apps to block during focus time</string>
+    <string name="app_picker_search_hint">Search apps...</string>
+    <string name="app_picker_selected_count">%d apps selected</string>
+    <string name="app_picker_save">Save</string>
+    <string name="app_picker_cancel">Cancel</string>
+    <string name="app_picker_loading">Loading apps...</string>
+
+    <!-- Blocking Overlay -->
+    <string name="blocking_title">App Blocked</string>
+    <string name="blocking_message">This app is blocked during your focus time.</string>
+    <string name="blocking_button_close">Close</string>
+    <string name="blocking_button_open_app">Open Main App</string>
+
+    <!-- Notifications -->
+    <string name="notification_channel_name">App Blocking</string>
+    <string name="notification_channel_description">Shows when apps are being blocked</string>
+    <string name="notification_title">Focus Mode Active</string>
+    <string name="notification_message">Blocking %d apps until schedule ends</string>
+
+    <!-- Permissions -->
+    <string name="permission_accessibility_title">Accessibility Permission Required</string>
+    <string name="permission_accessibility_message">To block apps, we need accessibility permission to detect when blocked apps are opened.</string>
+    <string name="permission_overlay_title">Overlay Permission Required</string>
+    <string name="permission_overlay_message">To show the blocking screen, we need permission to draw over other apps.</string>
+    <string name="permission_battery_title">Battery Optimization</string>
+    <string name="permission_battery_message">To reliably block apps, please disable battery optimization for this app.</string>
+</resources>
