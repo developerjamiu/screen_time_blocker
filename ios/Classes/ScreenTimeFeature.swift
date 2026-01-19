@@ -13,11 +13,11 @@ public class ScreenTimeFeature: NSObject {
     private let scheduleIdsKey = "SavedScheduleIds"
     
     // MARK: - Properties
-    
+
     private var appGroupId: String
     private let store = ManagedSettingsStore()
     private let center = DeviceActivityCenter()
-    
+
     public var currentSelection = FamilyActivitySelection() {
         didSet { saveSelection() }
     }
@@ -72,14 +72,30 @@ public class ScreenTimeFeature: NSObject {
     
     private func getAuthorizationStatus(result: @escaping FlutterResult) {
         let status = AuthorizationCenter.shared.authorizationStatus
-        
+
+        // If current selection is empty, try reloading from UserDefaults
+        // This handles cases where the selection wasn't loaded on init
+        // (e.g., due to UserDefaults sync timing on cold launch)
+        if currentSelection.applicationTokens.isEmpty &&
+           currentSelection.categoryTokens.isEmpty &&
+           currentSelection.webDomainTokens.isEmpty {
+            loadSelection()
+        }
+
         // Workaround: If status seems wrong but we have a saved selection,
         // the user must have approved in the past
-        if status != .approved && !currentSelection.applicationTokens.isEmpty {
+        let hasSelection = !currentSelection.applicationTokens.isEmpty ||
+                          !currentSelection.categoryTokens.isEmpty ||
+                          !currentSelection.webDomainTokens.isEmpty
+
+        if status != .approved && hasSelection {
+#if DEBUG
+            print("⚠️ ScreenTimeBlocker: AuthorizationCenter reports '\(status)' but we have saved selection - returning approved")
+#endif
             result("approved")
             return
         }
-        
+
         switch status {
         case .approved: result("approved")
         case .denied: result("denied")
@@ -247,11 +263,11 @@ public class ScreenTimeFeature: NSObject {
             print("❌ ScreenTimeBlocker: Cannot access App Group: \(appGroupId)")
             return
         }
-        
+
         do {
             let encoded = try JSONEncoder().encode(currentSelection)
             userDefaults.set(encoded, forKey: selectionKey)
-            
+
 #if DEBUG
             print("✅ ScreenTimeBlocker: Selection saved")
 #endif
@@ -259,16 +275,16 @@ public class ScreenTimeFeature: NSObject {
             print("❌ ScreenTimeBlocker: Failed to encode selection: \(error)")
         }
     }
-    
+
     private func loadSelection() {
         guard let userDefaults = UserDefaults(suiteName: appGroupId),
               let savedData = userDefaults.data(forKey: selectionKey) else {
             return
         }
-        
+
         do {
             currentSelection = try JSONDecoder().decode(FamilyActivitySelection.self, from: savedData)
-            
+
 #if DEBUG
             print("✅ ScreenTimeBlocker: Selection loaded")
 #endif
